@@ -164,23 +164,6 @@ class Screenspace:
 		self.draw_centered_text((300,500), date, font)
 
 	def draw_game_screen(self, game):
-		COLORS = {
-			'blue':(176,196,239),
-			'yellow':(249,223,109),
-			'green':(160,195,90),
-			'purple':(187,129,197),
-			'beige':(239,239,230),
-			'light-gray':(127,127,127),
-			'dark-gray':(90,89,78)
-		}
-		COLOR_ORDER = {
-			0:'blue',
-			1:'yellow',
-			2:'green',
-			3:'purple'
-		}
-
-
 		font = pg.font.Font(None, 23)
 		small_font = pg.font.Font(None, 21)
 
@@ -192,7 +175,7 @@ class Screenspace:
 		# completed groups
 		font = pg.font.Font(None, 23)
 		for i in range(len(game.completed_groups)):
-			pg.draw.rect(self.surface, COLORS[COLOR_ORDER[i]], pg.Rect((44, 70*i+104), (516, 66)), 0, 7)
+			pg.draw.rect(self.surface, self.COLORS[self.COLOR_ORDER[i]], pg.Rect((44, 70*i+104), (516, 66)), 0, 7)
 			self.draw_centered_text((300,70*i+124), game.completed_groups[i][0].upper(), font)
 			self.draw_centered_text((300,70*i+148), str(game.completed_groups[i][1]).strip('[]\'').replace('\', \'', ', ').upper(), small_font)
 
@@ -202,7 +185,7 @@ class Screenspace:
 				word_list_index = 4*(i-len(game.completed_groups))+j
 				word = game.words[word_list_index]
 				box_position = ((130*j+44, 70*i+104), (126, 66))
-				pg.draw.rect(self.surface, {False:COLORS['beige'], True:COLORS['dark-gray']}[word.is_selected], pg.Rect(box_position[0], box_position[1]), 0, 7)
+				pg.draw.rect(self.surface, {False:self.COLORS['beige'], True:self.COLORS['dark-gray']}[word.is_selected], pg.Rect(box_position[0], box_position[1]), 0, 7)
 				self.draw_centered_text((130*j+105, 70*i+135), word.w.upper(), font, {False:'black', True:'white'}[word.is_selected])
 				self.buttons.append(Button('word_'+str(word_list_index), box_position))
 
@@ -213,22 +196,22 @@ class Screenspace:
 		if not(game.is_game_over()):
 			self.draw_centered_text((255,420), 'Mistakes remaining:', small_font)
 			for i in range(game.guesses):
-				pg.draw.circle(self.surface, COLORS['dark-gray'], (20*i+345,420), 7)
+				pg.draw.circle(self.surface, self.COLORS['dark-gray'], (20*i+345,420), 7)
 
 		# shuffle button
-		color = {True:'black', False:COLORS['light-gray']}[not(game.is_game_over())]
+		color = {True:'black', False:self.COLORS['light-gray']}[not(game.is_game_over())]
 		pg.draw.rect(self.surface, color, pg.Rect((170, 450), (70, 40)), 1, 20)
 		self.draw_centered_text((205,470), 'Shuffle', small_font, color)
 		self.buttons.append(Button('shuffle', ((170, 450), (70, 40))))
 
 		# deselect button
-		color = {True:'black', False:COLORS['light-gray']}[game.num_selected() > 0]
+		color = {True:'black', False:self.COLORS['light-gray']}[game.num_selected() > 0]
 		pg.draw.rect(self.surface, color, pg.Rect((250, 450), (100, 40)), 1, 20)
 		self.draw_centered_text((300,470), 'Deselect all', small_font, color)
 		self.buttons.append(Button('deselect all', ((250, 450), (100, 40))))
 
 		# submit button
-		color = {True:'black', False:COLORS['light-gray']}[game.num_selected() == 4]
+		color = {True:'black', False:self.COLORS['light-gray']}[game.num_selected() == 4]
 		pg.draw.rect(self.surface, color, pg.Rect((360, 450), (70, 40)), 1, 20)
 		self.draw_centered_text((395,470), 'Submit', small_font, color)
 		self.buttons.append(Button('submit', ((360, 450), (70, 40))))
